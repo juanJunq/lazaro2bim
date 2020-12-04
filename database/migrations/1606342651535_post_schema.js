@@ -9,6 +9,7 @@ class PostSchema extends Schema {
       table.increments()
       table.string('titulo', 140).notNullable().unique()
       table.text('conteudo')
+      table.string('comentario', 255).notNullable().unique()
       table.timestamps()
     })
   }

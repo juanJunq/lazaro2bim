@@ -3,7 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-
+const Post = use("App/Models/Post")
 /**
  * Resourceful controller for interacting with posts
  */
@@ -18,19 +18,10 @@ class PostController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const post = await Post.all()
+    return post
   }
 
-  /**
-   * Render a form to be used for creating a new post.
-   * GET posts/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
 
   /**
    * Create/save a new post.
@@ -41,6 +32,9 @@ class PostController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const dados = request.only(["comentario"])
+    const post = await Post.create(dados)
+    return post
   }
 
   /**
@@ -53,6 +47,7 @@ class PostController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    const post = await Post.FindOrFail(params.id)
   }
 
   /**
@@ -76,6 +71,11 @@ class PostController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const post = await Post.findOrFail(params.id)
+    const {comentario}=request.only(["comentario"])
+    post.comentario = comentario
+    await post.save()
+    return post
   }
 
   /**
@@ -87,6 +87,9 @@ class PostController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const post = await Post.findOrFail(params.id)
+    await post.delete()
+    return post
   }
 }
 
